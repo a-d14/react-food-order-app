@@ -2,18 +2,29 @@ import { useState } from "react";
 import Header from "./components/Header";
 import Meals from "./components/Meals";
 import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+import Confirmation from "./components/Confirmation";
 
 function App() {
 
-  const [showCart, setShowCart] = useState(false);
+  const [userAction, setUserAction] = useState('');
+
   const [cartItems, setCartItems] = useState([]);
 
-  function handleShowCart() {
-    setShowCart(true);
+  function showCart() {
+    setUserAction('cart');
   }
 
-  function handleHideCart() {
-    setShowCart(false);
+  function showCheckout() {
+    setUserAction('checkout');
+  }
+
+  function showConfirmation() {
+    setUserAction('confirm');
+  }
+
+  function hideModal() {
+    setUserAction('');
   }
 
   function handleSetCartItems(item, quantity) {
@@ -35,11 +46,35 @@ function App() {
   }
   
   const totalItemsInCart = cartItems.length;
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+);
+
+  console.log(userAction === 'checkout');
+  
 
   return (
     <>
-      <Cart open={showCart} close={handleHideCart} items={cartItems} editQuantity={handleSetCartItems} />
-      <Header showCart={handleShowCart} itemsInCart={totalItemsInCart} />
+      <Cart 
+        open={userAction === 'cart'} 
+        close={hideModal} 
+        items={cartItems} 
+        totalPrice={totalPrice}
+        editQuantity={handleSetCartItems} 
+        onConfirm={showCheckout}
+      />
+      <Checkout 
+        open={userAction === 'checkout'} 
+        close={hideModal}
+        totalPrice={totalPrice}
+        onCheckout={showConfirmation}
+      />
+      <Confirmation
+        open={userAction === 'confirm'}
+        close={hideModal}
+      />
+      <Header showCart={showCart} itemsInCart={totalItemsInCart} />
       <Meals addMealToCart={handleSetCartItems} />
     </>
   );

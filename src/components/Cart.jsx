@@ -1,12 +1,7 @@
 import { formatter } from "../utils";
 import Modal from "./Modal";
 
-export default function Cart({open, close, items, editQuantity}) {
-
-    const totalPrice = items.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-    );
+export default function Cart({open, close, items, totalPrice, editQuantity, onConfirm}) {
 
     return (
         <Modal className="cart" open={open}>
@@ -29,7 +24,7 @@ export default function Cart({open, close, items, editQuantity}) {
             <p className="cart-total">{formatter.format(totalPrice)}</p>
             <div className="modal-actions">
                 <button className="text-button" onClick={close}>Close</button>
-                <button className="button">Go To Checkout</button>
+                <button className="button" onClick={onConfirm}>Go To Checkout</button>
             </div>
         </Modal>
     )
