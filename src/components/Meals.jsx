@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllMeals } from "../http";
 import MealItem from "./MealItem";
 
-export default function Meals() {
+export default function Meals({ addMealToCart }) {
     const [isFetching, setIsFetching] = useState(false);
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
@@ -28,10 +28,11 @@ export default function Meals() {
 
     return (
         <div id="meals"> 
-            {isFetching && <p>Fetching Meals...</p>}
+            {isFetching && <p>Fetching meals...</p>}
+            {error && <p>Error fetching meals</p>}
             {data &&
                 data.map((d) => {
-                    return <MealItem key={d.id} item={d} />
+                    return <MealItem addToCart={addMealToCart} key={d.id} item={d} />
                 })
             }
         </div>
